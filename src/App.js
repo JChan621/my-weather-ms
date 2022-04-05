@@ -65,7 +65,7 @@ class ListCities extends React.Component{
       list = citiesTrie.listNames(this.props.prefix);
     }
     else{
-      list = countriesTrie.listNames(this.props.prefix);
+      //list = countriesTrie.listNames(this.props.prefix);
     };
     if (list.length === 0){
       return (<></>);

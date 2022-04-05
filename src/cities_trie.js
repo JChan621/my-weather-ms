@@ -80,7 +80,7 @@ for (let item in countriesDict){
 };*/
 for (let i = 0; i < cities.length; i++){
   citiesTrie.insert(cities[i]["name"], i);
-  countriesDict[cities[i]['country']]["cities"].insert(cities[i]["name"]);//push(....);
+  //countriesDict[cities[i]['country']]["cities"].insert(cities[i]["name"]);//push(....);
 };
 
 //-----------------------------------------
