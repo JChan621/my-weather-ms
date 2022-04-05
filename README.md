@@ -1,10 +1,14 @@
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
+## ini
 ## Available Scripts
 
 In the project directory, you can run:
+### `npm install webpack cities.json countries-list
+
+To install the extra packages required
+
 
 ### `npm start`
 

@@ -11,3 +11,50 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.City {
+  margin-top: 50px;
+  width: 500px;
+  /*the container must be positioned relative:*/
+  position: relative;
+  display: inline-block;
+}
+input {
+  border: 1px solid transparent;
+  background-color: #f1f1f1;
+  padding: 10px;
+  font-size: 16px;
+}
+input[type=text] {
+  height: 40pt;
+  font-size: 20pt;
+  background-color: #f1f1f1;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.City-items {
+  position: absolute;
+  border: 1px solid #d4d4d4;
+  border-bottom: none;
+  border-top: none;
+  z-index: 99;
+  /*position the autocomplete items to be the same width as the container:*/
+  top: 100%;
+  left: 0;
+  right: 0;
+  text-align: left;
+}
+.City-items div {
+  color: #000000;
+  padding: 10px;
+  cursor: pointer;
+  background-color: #fff;
+  border-bottom: 1px solid #d4d4d4;
+  text-align: left;
+}
+.City-items div:hover {
+  background-color: #a9a9ff;
+}
+.City-items-active {
+  background-color: DodgerBlue !important;
+}
