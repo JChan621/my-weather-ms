@@ -1,7 +1,7 @@
 //import logo from './logo.svg';
 import './App.css';
 import React from 'react';
-import {countriesTrie, citiesTrie, countriesDict} from './cities_trie.js';
+import {citiesTrie, countriesDict} from './cities_trie.js';
 import cities from 'cities.json'; //of length 128769
 //----------------------------------------------------------------------------------------
 
@@ -91,7 +91,7 @@ class ListCities extends React.Component{
 CityField.defaultProps = {"country": ""};
 
 //-------------------------------------------------------------------------------------------------------------------------
-
+/*
 class CountryField extends React.Component {
   constructor(props){
     super(props);
@@ -107,7 +107,7 @@ class CountryField extends React.Component {
     return (<input value={this.state.input} onChange={this.handleChange} placeholder="Country" />);
   };
 };
-
+*/
 //--------------------------------------------------------------------------------------------------------
 class App extends React.Component {
   constructor(props){

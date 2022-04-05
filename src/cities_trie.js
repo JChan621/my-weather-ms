@@ -72,12 +72,12 @@ class Trie {
 //---------------------------------------------------
 
 var citiesTrie = new Trie();
-var countriesTrie = new Trie();
-
+//var countriesTrie = new Trie();
+/*
 for (let item in countriesDict){
   countriesDict[item]['cities'] = new Trie();//new Array()
   countriesTrie.insert(countriesDict[item]['name'], item);
-};
+};*/
 for (let i = 0; i < cities.length; i++){
   citiesTrie.insert(cities[i]["name"], i);
   countriesDict[cities[i]['country']]["cities"].insert(cities[i]["name"]);//push(....);
@@ -97,4 +97,4 @@ if (require.main === module) {
 };
 //module.exports = [countriesTrie, citiesTrie, countriesDict];*/
 
-export {countriesTrie, citiesTrie, countriesDict};
+export {citiesTrie, countriesDict};
