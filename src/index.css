@@ -1,5 +1,5 @@
 body {
-  background-color: #303949;
+  background-color: #606979;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -78,8 +78,23 @@ input[type=text] {
 .weather-container {
   transition: opacity 0.5s;
   opacity: 1;
+  height: 400px;
 }
 .weather-container-hide {
   opacity: 0;
   pointer-events: none;
+}
+footer {
+  padding-bottom: 60px;
+  font-size: calc(10px + 2vmin);
+  color: rgb(0, 0, 0);
+}
+a {
+  font-size: calc(10px + 2vmin);
+  color: rgb(0, 0, 231);
+  cursor: pointer;
+  text-decoration: underline;
+}
+a:hover{
+  color: rgb(150, 150, 205);
 }
