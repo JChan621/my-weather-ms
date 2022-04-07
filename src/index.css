@@ -1,4 +1,5 @@
 body {
+  background-color: #303949;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -12,7 +13,7 @@ code {
     monospace;
 }
 .City {
-  margin-top: 50px;
+  margin-top: 30px;
   width: 500px;
   /*the container must be positioned relative:*/
   position: relative;
@@ -20,19 +21,19 @@ code {
 }
 input {
   border: 1px solid transparent;
-  background-color: #f1f1f1;
+  background-color: rgb(231,231,231);
   padding: 10px;
   font-size: 16px;
 }
 input[type=text] {
   height: 40pt;
   font-size: 20pt;
-  background-color: #f1f1f1;
+  background-color: rgb(231,231,231);
   width: 100%;
   box-sizing: border-box;
 }
 
-.City-items {
+.City-items-container {
   position: absolute;
   border: 1px solid #d4d4d4;
   border-bottom: none;
@@ -44,17 +45,41 @@ input[type=text] {
   right: 0;
   text-align: left;
 }
-.City-items div {
+.City-items-container div {
   color: #000000;
   padding: 10px;
   cursor: pointer;
-  background-color: #fff;
+  background-color: rgb(231,231,231);
   border-bottom: 1px solid #d4d4d4;
   text-align: left;
 }
-.City-items div:hover {
+.City-items-container div:hover {
   background-color: #a9a9ff;
 }
 .City-items-active {
   background-color: DodgerBlue !important;
+  height: 21pt;
+  font-size: 14pt;
+}
+.City-items{
+  height: 21pt;
+  font-size: 14pt;
+}
+.weather-container{
+  margin-top: 50px;
+}
+.City-name{
+  font-size: 25pt;
+}
+.local-time{
+  font-size: 20pt;
+  margin-bottom: 50px;
+}
+.weather-container {
+  transition: opacity 0.5s;
+  opacity: 1;
+}
+.weather-container-hide {
+  opacity: 0;
+  pointer-events: none;
 }
