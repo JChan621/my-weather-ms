@@ -1,7 +1,9 @@
 import './App.css';
 import React from 'react';
-import cities from 'cities.json';
-var countriesDict = require('countries-list')['countries'];
+//import cities from 'cities.json';
+const cities = 1
+const countriesDict = 1;
+//var countriesDict = require('countries-list')['countries'];
 //----------------------------------------------------------------------------------------
 
 
