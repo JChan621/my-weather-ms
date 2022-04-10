@@ -1,9 +1,5 @@
 import './App.css';
 import React from 'react';
-//import cities from 'cities.json';
-const cities = 1
-const countriesDict = 1;
-//var countriesDict = require('countries-list')['countries'];
 //----------------------------------------------------------------------------------------
 
 
@@ -26,12 +22,12 @@ class CityField extends React.Component {
     this.keyDown = this.keyDown.bind(this);
     this.showWeather = this.showWeather.bind(this);
   };
-  showWeather(index){
+  showWeather(name, country, lat, lng){
     //Show weather and info.
-    this.setState({input: cities[index]['name'],
+    this.setState({input: name,
                    showList: false});
-    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${cities[index]['lat']}&lon=${cities[index]['lng']}&appid=${API_ID}`;
-    fetch(url)
+    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${API_ID}`;
+    fetch(url, {mode: 'cors'})
       .then(res => res.json())
       .then(result =>{
         let x = new Date();
@@ -47,7 +43,7 @@ class CityField extends React.Component {
           weather: 
             <div className="weather-container">
               <div className='City-name'>
-                {cities[index]['name']}, {countriesDict[cities[index]['country']]['name']}
+                {name}, {country}
               </div>
               <div className='local-time'>
                 {h}:{m}
@@ -84,7 +80,8 @@ class CityField extends React.Component {
         //Pressing enter completing the input field and show weather.
         event.preventDefault();
         if (document.getElementsByClassName("City-items-active")[0]){
-          this.showWeather(document.getElementsByClassName("City-items-active")[0].getAttribute("id"));
+          let city = document.getElementsByClassName("City-items-active")[0];
+          this.showWeather(city.getAttribute('name'), city.getAttribute('country'), city.getAttribute('lat'), city.getAttribute('lng'));
         }
       }
   }
@@ -136,18 +133,18 @@ class ListCities extends React.Component{
   updateList(){
     //Update the list when the input changes
     //this.setState({listIndices: citiesTrie.listNames(this.props.prefix)}, this.computeJsx);
-    fetch(`https://city-trie-route.herokuapp.com/listcities?prefix=${this.props.prefix}`).then(res => res.json()).then(result => this.setState({listIndices: result.data}, this.computeJsx))
+    fetch(`https://city-trie-route.herokuapp.com/listcities?prefix=${this.props.prefix}`, {mode: 'cors'}).then(res => res.json()).then(result => this.setState({listIndices: result.data}, this.computeJsx))
   }
   computeJsx(){
     //Compute the jsx if input changes or arrow hover changes.
     let list = this.state.listIndices;
     let ans = [];
     for (let i = 0; i < list.length; i++){
-      console.log()
-      ans.push(<div className={((this.props.active + 1) % (list.length + 1) + (list.length + 1)) % (list.length + 1)- 1 === i ? "City-items-active" : "City-items"} key={i} id={list[i]} onMouseDown={(e) => {console.log(e.type);this.props.showWeather(list[i])}}>
-                    <strong>{cities[list[i]]['name'].substring(0, this.props.prefix.length)}
+      let city = list[i];
+      ans.push(<div className={((this.props.active + 1) % (list.length + 1) + (list.length + 1)) % (list.length + 1)- 1 === i ? "City-items-active" : "City-items"} key={i} lng={city.lng} lat={city.lat} name={city.name} country={city.countryName}  onMouseDown={(e) => this.props.showWeather(city.name, city.countryName, city.lat, city.lng)}>
+                    <strong>{city['name'].substring(0, this.props.prefix.length)}
                     </strong>
-                    {cities[list[i]]['name'].substring(this.props.prefix.length)}, {countriesDict[cities[list[i]]['country']]['name']}
+                    {city['name'].substring(this.props.prefix.length)}, {city['countryName']}
                     <input type='hidden' value={list[i]}/>
               </div>);
     };
