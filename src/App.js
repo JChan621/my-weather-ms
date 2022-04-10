@@ -1,11 +1,12 @@
 import './App.css';
 import React from 'react';
-import { citiesTrie, countriesDict } from './cities_trie.js';
-import cities from 'cities.json'; //of length 128769
+import cities from 'cities.json';
+var countriesDict = require('countries-list')['countries'];
 //----------------------------------------------------------------------------------------
 
 
-const API_ID = process.env.REACT_APP_API_ID;
+//const API_ID = process.env.REACT_APP_API_ID;
+const API_ID = '53484872d9396a19d13a7ef976662159';
 
 
 class CityField extends React.Component {
@@ -65,24 +66,26 @@ class CityField extends React.Component {
     });
   }
   keyDown(event){
-    //Arrow key up and down to navigate through the list
-    if(event.keyCode === 40){
-      //Arrow up
-      event.preventDefault();
-       this.setState({active: this.state.active + 1, showList: true});
-    }
-    else if(event.keyCode === 38){
-      //Arrow down.
-      event.preventDefault();
-      this.setState({active: this.state.active - 1, showList: true});
-    }
-    else if (event.keyCode === 13){
-      //Pressing enter completing the input field and show weather.
-      event.preventDefault();
-      if (document.getElementsByClassName("City-items-active")[0]){
-        this.showWeather(document.getElementsByClassName("City-items-active")[0].getAttribute("id"));
+    if (this.state.input.length > 0){
+    //Arrow key up and down to navigate through the list, or enter to get the city
+      if(event.keyCode === 40 && this.state.input.length > 0){
+        //Arrow up
+        event.preventDefault();
+        this.setState({active: this.state.active + 1, showList: true});
       }
-    }
+      else if(event.keyCode === 38){
+        //Arrow down.
+        event.preventDefault();
+        this.setState({active: this.state.active - 1, showList: true});
+      }
+      else if (event.keyCode === 13){
+        //Pressing enter completing the input field and show weather.
+        event.preventDefault();
+        if (document.getElementsByClassName("City-items-active")[0]){
+          this.showWeather(document.getElementsByClassName("City-items-active")[0].getAttribute("id"));
+        }
+      }
+  }
   }
   focus(event){ 
     //Toggle the list to show when focus
@@ -94,13 +97,18 @@ class CityField extends React.Component {
   }
   handleChange(event) {
     //set input box value
-    this.setState({input: event.target.value, showList: true, active: -1});
+    if (event.target.value === ""){
+      this.setState({input: event.target.value, showList: false, active: -1});
+    }
+    else{
+      this.setState({input: event.target.value, showList: true, active: -1});
+    }
   };
   render() {
       return (<div>
                 <div className="City" onBlur={this.blur}>
                   <input value={this.state.input} type="text" onKeyDown={this.keyDown} onChange={this.handleChange} onFocus={this.focus} placeholder="City" />
-                  <ListCities showWeather={this.showWeather} active={this.state.active} show={this.state.showList} prefix={this.state.input} country=""/>
+                  <div style={{ visibility: (this.state.showList ? 'visible' : 'hidden')}}><ListCities showWeather={this.showWeather} active={this.state.active} prefix={this.state.input} country=""/></div>
                 </div>
                 {this.state.weather}
               </div>);
@@ -109,68 +117,46 @@ class CityField extends React.Component {
 class ListCities extends React.Component{
   constructor(props){
     super(props);
-  }
-  componentDidMount() {
-    this.callBackendAPI()
-      .then(res => this.setState({ data: res.express }))
-      .catch(err => console.log(err));
-  }
-    // fetching the GET route from the Express server which matches the GET route from server.js
-  callBackendAPI = async () => {
-    const response = await fetch('/express_backend');
-    const body = await response.json();
+    this.state = {
+      listIndices: [],
+      returnList: []
+    }
 
-    if (response.status !== 200) {
-      throw Error(body.message) 
+  }
+  componentDidUpdate(prevProps, prevState){
+    if (this.props.prefix !== prevProps.prefix && this.props.prefix.length > 0){
+      this.updateList();
     }
-    return body;
-  };
-  //MAX_LENGTH = 30;
-  render(){
-    
-    if (this.props.prefix.length === 0 || !this.props.show){
-      //No need to create the list if the field is empty
-      return (<></>);
+    else if(this.props.active !== prevProps.active){
+      this.computeJsx();
     }
-    var list;
-    if (this.props.country === ""){
-      list = citiesTrie.listNames(this.props.prefix);
-    }
-    else{
-      //For future use
-      //list = countriesTrie.listNames(this.props.prefix);
-    };
-    if (list.length === 0){
-      //Return nothing if nothing match.
-      return (<></>);
-    };
+  }
+  updateList(){
+    //Update the list when the input changes
+    //this.setState({listIndices: citiesTrie.listNames(this.props.prefix)}, this.computeJsx);
+    fetch(`https://city-trie-route.herokuapp.com/listcities?prefix=${this.props.prefix}`).then(res => res.json()).then(result => this.setState({listIndices: result.data}, this.computeJsx))
+  }
+  computeJsx(){
+    //Compute the jsx if input changes or arrow hover changes.
+    let list = this.state.listIndices;
     let ans = [];
-    //ans.push(<div style={this.fontNorm}>asdfsadfaslfsafkjasdlfkjlsafddddddd</div>)
     for (let i = 0; i < list.length; i++){
-      //Allowing user the loop through the list with % (n + 1)
-      if (((this.props.active + 1) % (list.length + 1) + (list.length + 1)) % (list.length + 1)- 1 === i){
-        ans.push(<div className="City-items-active" key={i} id={list[i]} onMouseDown={(e) => {this.props.showWeather(list[i])}}>
+      console.log()
+      ans.push(<div className={((this.props.active + 1) % (list.length + 1) + (list.length + 1)) % (list.length + 1)- 1 === i ? "City-items-active" : "City-items"} key={i} id={list[i]} onMouseDown={(e) => {console.log(e.type);this.props.showWeather(list[i])}}>
                     <strong>{cities[list[i]]['name'].substring(0, this.props.prefix.length)}
                     </strong>
                     {cities[list[i]]['name'].substring(this.props.prefix.length)}, {countriesDict[cities[list[i]]['country']]['name']}
                     <input type='hidden' value={list[i]}/>
-                 </div>);
-      }
-      else{
-        ans.push(<div className="City-items" key={i} id={list[i]} onMouseDown={(e) => {this.props.showWeather(list[i])}}>
-                  <strong >{cities[list[i]]['name'].substring(0, this.props.prefix.length)}
-                  </strong>
-                  {cities[list[i]]['name'].substring(this.props.prefix.length)}, {countriesDict[cities[list[i]]['country']]['name']}
-                  <input type='hidden' value={list[i]}/>
-                 </div>);
-      }
+              </div>);
     };
+    this.setState({returnList: ans});
+  }
+  render(){
     return(<div className="City-items-container">
-            {ans}
+            {this.state.returnList}
            </div>);
   }
 }
-//CityField.defaultProps = {"country": ""};
 
 //--------------------------------------------------------------------------------------------------------
 class App extends React.Component {
