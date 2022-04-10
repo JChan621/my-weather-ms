@@ -65,9 +65,6 @@ input[type=text] {
   height: 21pt;
   font-size: 14pt;
 }
-.weather-container{
-  margin-top: 50px;
-}
 .City-name{
   font-size: 25pt;
 }
@@ -76,12 +73,14 @@ input[type=text] {
   margin-bottom: 50px;
 }
 .weather-container {
-  transition: opacity 0.5s;
+  margin-top: 50px;
+  transition: opacity 1s;
   opacity: 1;
   height: 400px;
 }
 .weather-container-hide {
   opacity: 0;
+  margin-top: 50px;
   pointer-events: none;
 }
 footer {

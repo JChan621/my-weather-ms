@@ -14,7 +14,8 @@ class CityField extends React.Component {
         input: "",
         showList : true,
         active: -1,
-        weather: <div className="weather-container"></div>
+        weather: <div className="weather-container"></div>,
+        weatherClass: "weather-container"
     };
     this.handleChange = this.handleChange.bind(this);
     this.blur = this.blur.bind(this); 
@@ -24,15 +25,19 @@ class CityField extends React.Component {
   };
   showWeather(name, country, lat, lng){
     //Show weather and info.
-    this.setState({input: name,
-                   showList: false});
     const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${API_ID}`;
+    this.setState({input: name,
+                   showList: false, weatherClass: "weather-container-hide"});
     fetch(url, {mode: 'cors'})
       .then(res => res.json())
       .then(result =>{
         let x = new Date();
-        let h = (((x.getUTCHours() + result['timezone'] / 3600) + 24) % 24).toString();
-        let m = x.getMinutes().toString();
+        let h = (((x.getUTCHours() + result['timezone'] / 3600) + 24) % 24);
+        let m = x.getMinutes() + (h % 1) * 60; //Some timezone has 0.5 hours offset.
+        h += -(h % 1) + (m - m % 60) / 60;
+        h = h.toString();
+        m %= 60;
+        m = m.toString();
         if (m.length < 2){
           m = "0" + m;
         }
@@ -41,7 +46,7 @@ class CityField extends React.Component {
         }
         this.setState({
           weather: 
-            <div className="weather-container">
+            <div>
               <div className='City-name'>
                 {name}, {country}
               </div>
@@ -58,7 +63,7 @@ class CityField extends React.Component {
                 {result['weather'][0]['main']}
                 <figure><img src={`http://openweathermap.org/img/wn/${result['weather'][0]['icon']}@2x.png`}/></figure>
               </div>
-            </div>});
+            </div>}, this.setState({weatherClass: "weather-container"}));
       }).catch(err =>{
         console.log('Error fetching and parsing data', err);
     });
@@ -109,7 +114,9 @@ class CityField extends React.Component {
                   <input value={this.state.input} type="text" onKeyDown={this.keyDown} onChange={this.handleChange} onFocus={this.focus} placeholder="City" />
                   <div style={{ visibility: (this.state.showList ? 'visible' : 'hidden')}}><ListCities showWeather={this.showWeather} active={this.state.active} prefix={this.state.input} country=""/></div>
                 </div>
-                {this.state.weather}
+                <div className={this.state.weatherClass}>
+                  {this.state.weather}
+                </div>
               </div>);
   };
 };
