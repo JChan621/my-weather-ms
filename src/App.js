@@ -93,7 +93,9 @@ class CityField extends React.Component {
   }
   focus(event){ 
     //Toggle the list to show when focus
-    this.setState({showList: true});
+    if (this.state.input.length > 0){
+      this.setState({showList: true});
+    }
   }
   blur(event){
     //Toggle the list to hide when blur
@@ -105,14 +107,14 @@ class CityField extends React.Component {
       this.setState({input: event.target.value, showList: false, active: -1});
     }
     else{
-      this.setState({input: event.target.value, showList: true, active: -1});
+      this.setState({input: event.target.value, active: -1});
     }
   };
   render() {
       return (<div>
                 <div className="City" onBlur={this.blur}>
                   <input value={this.state.input} type="text" onKeyDown={this.keyDown} onChange={this.handleChange} onFocus={this.focus} placeholder="City" />
-                  <div style={{ visibility: (this.state.showList ? 'visible' : 'hidden')}}><ListCities showWeather={this.showWeather} active={this.state.active} prefix={this.state.input} country=""/></div>
+                  <div style={{ visibility: (this.state.showList ? 'visible' : 'hidden')}}><ListCities focus={this.focus} showWeather={this.showWeather} active={this.state.active} prefix={this.state.input} country=""/></div>
                 </div>
                 <div className={this.state.weatherClass}>
                   {this.state.weather}
@@ -139,8 +141,7 @@ class ListCities extends React.Component{
   }
   updateList(){
     //Update the list when the input changes
-    //this.setState({listIndices: citiesTrie.listNames(this.props.prefix)}, this.computeJsx);
-    fetch(`https://city-trie-route.herokuapp.com/listcities?prefix=${this.props.prefix}`, {mode: 'cors'}).then(res => res.json()).then(result => this.setState({listIndices: result.data}, this.computeJsx))
+    fetch(`https://city-trie-route.herokuapp.com/listcities?prefix=${encodeURI(this.props.prefix)}`, {mode: 'cors'}).then(res => res.json()).then(result => this.setState({listIndices: result.data}, this.computeJsx))
   }
   computeJsx(){
     //Compute the jsx if input changes or arrow hover changes.
@@ -155,7 +156,7 @@ class ListCities extends React.Component{
                     <input type='hidden' value={list[i]}/>
               </div>);
     };
-    this.setState({returnList: ans});
+    this.setState({returnList: ans}, this.props.focus);
   }
   render(){
     return(<div className="City-items-container">
