@@ -1,5 +1,5 @@
 import './App.css';
-import React from 'react';
+import {Component} from 'react';
 //----------------------------------------------------------------------------------------
 
 
@@ -7,7 +7,7 @@ import React from 'react';
 const API_ID = '53484872d9396a19d13a7ef976662159';
 
 
-class CityField extends React.Component {
+class CityField extends Component {
   constructor(props){
     super(props);
     this.state = {
@@ -18,7 +18,7 @@ class CityField extends React.Component {
         weatherClass: "weather-container"
     };
     this.handleChange = this.handleChange.bind(this);
-    this.blur = this.blur.bind(this); 
+    this.blur = this.blur.bind(this);
     this.focus = this.focus.bind(this);
     this.keyDown = this.keyDown.bind(this);
     this.showWeather = this.showWeather.bind(this);
@@ -26,8 +26,7 @@ class CityField extends React.Component {
   showWeather(name, country, lat, lng){
     //Show weather and info.
     const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${API_ID}`;
-    this.setState({input: name,
-                   showList: false, weatherClass: "weather-container-hide"});
+    this.setState({input: name, showList: false, weatherClass: "weather-container-hide"});
     fetch(url, {mode: 'cors'})
       .then(res => res.json())
       .then(result =>{
@@ -107,14 +106,14 @@ class CityField extends React.Component {
       this.setState({input: event.target.value, showList: false, active: -1});
     }
     else{
-      this.setState({input: event.target.value, active: -1});
+      this.setState({input: event.target.value, showList: true, active: -1});
     }
   };
   render() {
       return (<div>
                 <div className="City" onBlur={this.blur}>
                   <input value={this.state.input} type="text" onKeyDown={this.keyDown} onChange={this.handleChange} onFocus={this.focus} placeholder="City" />
-                  <div style={{ visibility: (this.state.showList ? 'visible' : 'hidden')}}><ListCities focus={this.focus} showWeather={this.showWeather} active={this.state.active} prefix={this.state.input} country=""/></div>
+                  <div style={{ visibility: (this.state.showList ? 'visible' : 'hidden')}}><ListCities focus={this.focus} showWeather={this.showWeather} active={this.state.active} prefix={this.state.input} /></div>
                 </div>
                 <div className={this.state.weatherClass}>
                   {this.state.weather}
@@ -122,7 +121,7 @@ class CityField extends React.Component {
               </div>);
   };
 };
-class ListCities extends React.Component{
+class ListCities extends Component{
   constructor(props){
     super(props);
     this.state = {
@@ -132,8 +131,13 @@ class ListCities extends React.Component{
 
   }
   componentDidUpdate(prevProps, prevState){
-    if (this.props.prefix !== prevProps.prefix && this.props.prefix.length > 0){
+    if (this.props.prefix !== prevProps.prefix){
+      if (this.props.prefix.length === 0){
+        this.setState({returnList: []});
+      }
+      else {
       this.updateList();
+      }
     }
     else if(this.props.active !== prevProps.active){
       this.computeJsx();
@@ -156,7 +160,7 @@ class ListCities extends React.Component{
                     <input type='hidden' value={list[i]}/>
               </div>);
     };
-    this.setState({returnList: ans}, this.props.focus);
+    this.setState({returnList: ans});
   }
   render(){
     return(<div className="City-items-container">
@@ -166,7 +170,7 @@ class ListCities extends React.Component{
 }
 
 //--------------------------------------------------------------------------------------------------------
-class App extends React.Component {
+class App extends Component {
   constructor(props){
     super(props);
   };
@@ -184,7 +188,7 @@ class App extends React.Component {
           target="_blank"
           rel="noopener noreferrer">
           GitHub
-      </a> | 
+      </a>
       </footer>
     </div>
   )};
