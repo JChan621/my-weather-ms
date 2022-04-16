@@ -4,6 +4,7 @@ import {Component} from 'react';
 
 
 //const API_ID = process.env.REACT_APP_API_ID;
+fetch('https://city-trie-route.herokuapp.com');
 const API_ID = '53484872d9396a19d13a7ef976662159';
 
 
