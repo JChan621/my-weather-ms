@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+fetch('https://city-trie-route.herokuapp.com', {mode: 'cors'});
 ReactDOM.render(
   <React.StrictMode>
     <App />
