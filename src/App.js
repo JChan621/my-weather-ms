@@ -4,7 +4,6 @@ import {Component} from 'react';
 
 
 //const API_ID = process.env.REACT_APP_API_ID;
-fetch('https://city-trie-route.herokuapp.com');
 const API_ID = '53484872d9396a19d13a7ef976662159';
 
 
@@ -61,7 +60,7 @@ class CityField extends Component {
               </div>
               <div className="condition">
                 {result['weather'][0]['main']}
-                <figure><img src={`http://openweathermap.org/img/wn/${result['weather'][0]['icon']}@2x.png`}/></figure>
+                <figure><img src={`https://openweathermap.org/img/wn/${result['weather'][0]['icon']}@2x.png`}/></figure>
               </div>
             </div>}, this.setState({weatherClass: "weather-container"}));
       }).catch(err =>{
